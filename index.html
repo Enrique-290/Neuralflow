@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuralFlow – MVP</title>
+  <meta name="theme-color" content="#0b66c3"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🧠</div>
+      <div class="title">NeuralFlow <span class="tag">MVP</span></div>
+    </div>
+    <nav class="actions">
+      <button id="btnSync" class="btn">Sincronizar</button>
+      <button id="btnRun" class="btn primary">Ejecutar</button>
+    </nav>
+  </header>
+
+  <aside class="sidebar">
+    <div class="section-label">Módulos</div>
+    <button class="tablink active" data-tab="inbox">📥 Bandeja</button>
+    <button class="tablink" data-tab="parser">🧩 Parser</button>
+    <button class="tablink" data-tab="quotes">💲 Cotizaciones</button>
+    <button class="tablink" data-tab="purchases">🛒 Compras</button>
+    <button class="tablink" data-tab="itins">🧾 Itinerarios</button>
+    <button class="tablink" data-tab="reports">📊 Reportes</button>
+    <button class="tablink" data-tab="settings">⚙️ Ajustes</button>
+
+    <div class="section-label">Conectores</div>
+    <label class="switch"><input type="checkbox" checked/><span></span> Gmail</label>
+    <label class="switch"><input type="checkbox" checked/><span></span> WhatsApp</label>
+    <label class="switch"><input type="checkbox" checked/><span></span> Google Sheets</label>
+    <label class="switch"><input type="checkbox" /><span></span> Drive</label>
+  </aside>
+
+  <main class="content">
+    <section id="inbox" class="tab active">
+      <h2>📥 Bandeja unificada</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Correo</h3>
+          <ul id="emailList" class="list"></ul>
+        </div>
+        <div class="card">
+          <h3>WhatsApp</h3>
+          <ul id="waList" class="list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="parser" class="tab">
+      <h2>🧩 Parser</h2>
+      <div class="card">
+        <textarea id="rawInput" rows="7" placeholder="Pega aquí una solicitud (correo/WA) para extraer: ORIGEN, DESTINO, FECHAS, PAX, PRESUPUESTO..."></textarea>
+        <div class="row">
+          <button id="btnParse" class="btn">Extraer</button>
+          <label><input type="checkbox" id="chkAI" checked/> AI asistida</label>
+        </div>
+        <pre id="parsed" class="pre"></pre>
+      </div>
+    </section>
+
+    <section id="quotes" class="tab">
+      <h2>💲 Cotizaciones</h2>
+      <div class="card">
+        <div class="row">
+          <button id="btnNewQuote" class="btn">Nueva cotización</button>
+          <button id="btnExportXLSX" class="btn">Exportar Excel</button>
+          <button id="btnSend" class="btn primary">Enviar por correo / WA</button>
+        </div>
+        <table id="quoteTable" class="table"></table>
+      </div>
+    </section>
+
+    <section id="purchases" class="tab">
+      <h2>🛒 Compras</h2>
+      <div class="card">
+        <div class="row">
+          <input id="pnr" placeholder="PNR / Localizador" />
+          <input id="amount" type="number" placeholder="Total" />
+          <button class="btn">Registrar compra</button>
+        </div>
+        <ul id="purchasesList" class="list"></ul>
+      </div>
+    </section>
+
+    <section id="itins" class="tab">
+      <h2>🧾 Itinerarios</h2>
+      <div class="card">
+        <div class="row">
+          <input id="itinClient" placeholder="Cliente / Empresa"/>
+          <input id="itinLink" placeholder="URL PDF en Drive"/>
+          <button class="btn primary">Enviar itinerario</button>
+        </div>
+        <ul id="itinsList" class="list"></ul>
+      </div>
+    </section>
+
+    <section id="reports" class="tab">
+      <h2>📊 Reportes</h2>
+      <div class="grid two">
+        <div class="card"><canvas id="chart1" width="400" height="220"></canvas></div>
+        <div class="card"><canvas id="chart2" width="400" height="220"></canvas></div>
+      </div>
+    </section>
+
+    <section id="settings" class="tab">
+      <h2>⚙️ Ajustes</h2>
+      <div class="card">
+        <div class="grid two">
+          <div>
+            <h3>Credenciales (placeholder)</h3>
+            <label>Gmail Token <input placeholder="paste token..."/></label>
+            <label>WhatsApp Token <input placeholder="paste token..."/></label>
+            <label>Sheets Service Account <input placeholder="JSON..."/></label>
+          </div>
+          <div>
+            <h3>Tema</h3>
+            <label>Color principal <input id="colorPrimary" type="color" value="#0b66c3"/></label>
+            <label>Color fondo <input id="colorBg" type="color" value="#f7fbff"/></label>
+            <button id="btnSaveTheme" class="btn">Guardar tema</button>
+          </div>
+        </div>
+        <p class="hint">Nota: Este MVP es frontal. Los botones tienen <b>TODO:</b> conectar a API/Webhooks.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">Hecho por <b>NeuralApps</b> • MVP UI • 2025</footer>
+  <script src="app.js"></script>
+</body>
+</html>
