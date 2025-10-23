@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NeuralFlow – MVP</title>
   <meta name="theme-color" content="#0b66c3"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css"/>
 </head>
@@ -70,7 +69,7 @@
       <div class="card">
         <div class="row">
           <button id="btnNewQuote" class="btn">Nueva cotización</button>
-          <button id="btnExportXLSX" class="btn">Exportar Excel</button>
+          <button id="btnExportXLSX" class="btn">Registrar (Sheets)</button>
           <button id="btnSend" class="btn primary">Enviar por correo / WA</button>
         </div>
         <table id="quoteTable" class="table"></table>
@@ -126,7 +125,7 @@
             <button id="btnSaveTheme" class="btn">Guardar tema</button>
           </div>
         </div>
-        <p class="hint">Nota: Este MVP es frontal. Los botones tienen <b>TODO:</b> conectar a API/Webhooks.</p>
+        <p class="hint">Nota: Este MVP es frontal. Los botones llaman endpoints en <code>/api/*</code>.</p>
       </div>
     </section>
   </main>

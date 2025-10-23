@@ -1,6 +1,5 @@
 
 import axios from 'axios';
-
 export default async function handler(req, res){
   if(req.method === 'GET'){
     const verifyToken = process.env.WA_VERIFY_TOKEN || 'neuralapps-verify';

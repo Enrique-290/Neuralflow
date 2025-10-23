@@ -1,6 +1,5 @@
 
 import { google } from 'googleapis';
-
 function getAuth(){
   return new google.auth.JWT(
     process.env.GOOGLE_CLIENT_EMAIL,
@@ -9,7 +8,6 @@ function getAuth(){
     ['https://www.googleapis.com/auth/drive']
   );
 }
-
 export default async function handler(req,res){
   if(req.method !== 'POST') return res.status(405).end();
   try{

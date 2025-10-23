@@ -8,7 +8,7 @@ document.querySelectorAll('.tablink').forEach(btn=>{
   });
 });
 
-// Fake inbox data (mock)
+// Mock inbox
 const emails=[
   {from:'ventas@empresa.com', subject:'Cotización CDMX-MTY', ts:'2025-10-22 11:12'},
   {from:'rh@bimbo.com', subject:'Grupo 25 pax GDL→CDMX', ts:'2025-10-22 10:03'}
@@ -47,7 +47,7 @@ const table=document.getElementById('quoteTable');
 table.innerHTML = `<thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>`+
                   `<tbody>${data.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>`;
 
-// Charts (very small demo using Canvas API)
+// Charts (canvas)
 function bar(canvasId, values, labels){
   const c=document.getElementById(canvasId);
   const ctx=c.getContext('2d');
@@ -75,4 +75,63 @@ document.getElementById('btnSaveTheme').addEventListener('click',()=>{
   document.documentElement.style.setProperty('--bg', bg);
   document.documentElement.style.setProperty('--brand', primary);
   alert('Tema aplicado (local).');
+});
+
+// ======================
+// Backend Integration
+// ======================
+async function postJSON(url, payload){
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok){ throw new Error(data?.error || ("Error " + res.status)); }
+  return data;
+}
+
+async function registrarCotizacion(){
+  const row = data?.[0] || ['Público','CDMX→MTY','12-14 Nov','2','$ 6,800','BORRADOR'];
+  const payload = {
+    cliente: row[0],
+    ruta: row[1],
+    fechas: row[2],
+    pax: Number(String(row[3]).replace(/\D/g,'')) || 1,
+    precio: row[4],
+    estado: row[5]
+  };
+  const out = await postJSON("/api/sheets-upsertQuote", payload);
+  console.log("Sheets upsert:", out);
+  alert("✅ Cotización registrada en Sheets");
+}
+
+async function enviarCorreo(){
+  const parsedBox = document.getElementById('parsed').textContent || "";
+  let to = (parsedBox.match(/[\w.-]+@[\w.-]+\.[A-Za-z]{2,}/) || ["cliente@empresa.com"])[0];
+  const itinLink = document.getElementById('itinLink')?.value?.trim();
+  const attachments = itinLink ? [{ filename:"itinerario.pdf", path: itinLink }] : undefined;
+  const payload = { to, subject: "Cotización NeuralFlow", html: "<b>Adjunto tu cotización / itinerario.</b>", attachments };
+  const out = await postJSON("/api/gmail-send", payload);
+  console.log("Gmail send:", out);
+  return out;
+}
+
+async function enviarWhatsApp(){
+  const phoneGuess = (document.getElementById('rawInput').value.match(/\+?\d{2,3}[\s-]?\d{2,4}[\s-]?\d{4,}/) || ["+525541112233"])[0];
+  const payload = { to: phoneGuess, text: "Hola 👋 aquí tienes tu cotización de NeuralFlow." };
+  const out = await postJSON("/api/wa-send", payload);
+  console.log("WA send:", out);
+  return out;
+}
+
+document.getElementById("btnExportXLSX").addEventListener("click", async ()=>{
+  try{ await registrarCotizacion(); }catch(e){ console.error(e); alert("❌ Error registrando en Sheets: " + e.message); }
+});
+document.getElementById("btnSend").addEventListener("click", async ()=>{
+  try{
+    await enviarCorreo();
+    try{ await enviarWhatsApp(); alert("✅ Enviado por correo y WhatsApp"); }
+    catch(eWA){ console.warn("WA falló:", eWA.message); alert("✅ Correo enviado. ⚠️ WhatsApp falló: " + eWA.message); }
+  }catch(e){ console.error(e); alert("❌ Error enviando: " + e.message); }
 });

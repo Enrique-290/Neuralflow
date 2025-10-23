@@ -1,6 +1,5 @@
 
 import axios from 'axios';
-
 export default async function handler(req,res){
   if(req.method !== 'POST') return res.status(405).end();
   try{
@@ -14,6 +13,6 @@ export default async function handler(req,res){
     res.status(200).json({ ok:true, data });
   }catch(e){
     console.error(e?.response?.data || e.message);
-    res.status(500).json({ ok:false, error: e?.response?.data || e.message });
+    res.status(500).json({ ok:false, error:e?.response?.data || e.message });
   }
 }
